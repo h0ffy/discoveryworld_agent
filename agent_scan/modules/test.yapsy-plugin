@@ -1,0 +1,9 @@
+[Core]
+Name = Test Plugin Discovery Agent Scan (DiscoveryWorld // @JennyLab)
+Module = Test
+
+[Documentation]
+Author = h0ffy // @JennyLab
+Version = 0.01
+Website = https://github.com/h0ffy/discoveryagent
+Description = Test plugin to discovery agent scan of discoveryworld proyect by @JennyLab
