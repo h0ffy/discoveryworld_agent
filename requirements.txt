@@ -1,1 +1,14 @@
 selenium
+urllib
+urllib3
+ip2domain
+tldextract 
+commands
+daemon
+geoip
+MySQLdb
+threading
+webtech
+httpx
+beautifulsoup4 
+pandas
