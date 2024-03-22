@@ -16,6 +16,7 @@ import logger
 from debug import * 
 from beanstalk import *
 from agent_scan.modules.ip2domain import *
+from agent_scan.modules.geoip import * 
 
 logger = logging.logger(__name__)
 
@@ -36,7 +37,11 @@ def agent_scan(queue,scan_type,scan_data):
             if domains.result.domains is not None:
                 for domain in domains.result.domains:
                     queue.output('{ "agent" : "null" , "plugin" : "agent_scan.ip2domain", "ip" : "{}", "domain" : "{}" }'.format(ip,domain))
-                
+    elif scan_type == "geoip":
+        ip = scan_data.get_key("IP")
+        result = GeoIP(ip)
+        if result is not None:
+            queue.output('{ "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : "{}", "country" : "{}", "continent" : "{}", "timezone" : "{}" }'.format(ip,result.country,result.continent,result.timezone))
 
 
 
