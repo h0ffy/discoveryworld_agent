@@ -42,7 +42,7 @@ class SubDomains:
 		        self.domains=[]
 		
         
-    # extract domains from crt.sh
+    # extract domains from crt.sh ( thasnk you 0xd0m7 )
     def crt_sh(self):
 		uri = 'https://crt.sh/?q={}'.format(self.domain)
 		response = urllib3.request("GET",uri)
