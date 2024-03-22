@@ -58,14 +58,15 @@ class DiscoveryAgent:
         
         while 1:      
             tasks = task.recv("agent.scan")
-            for tasks in job:
-                PDEBUG.log("Main: rec\t\t OK")
-                scan_type = job.job_data.get("scan_type")
-                scan_data = job.job_data.scan_data("scan_data")
-                PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
-                agent_scan(queue,scan_type,scan_data)
-            #done
-            
+            if tasks:
+                for tasks in job:
+                    PDEBUG.log("Main: rec\t\t OK")
+                    scan_type = job.job_data.get("scan_type")
+                    scan_data = job.job_data.scan_data("scan_data")
+                    PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
+                    agent_scan(queue,scan_type,scan_data)
+                #done
+                
             time.sleep(2)
         
         sys.exit(0)
