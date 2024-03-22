@@ -17,6 +17,7 @@ class BeanStackQueue:
         self.client = None
         self.output = None
         self.job_data = None
+        self.job = None
         self.server = server
         self.port = port
         
@@ -58,11 +59,14 @@ class BeanStackQueue:
         
         try:
             for job in self.client.reserve_iter():
+                self.job = job
                 self.job_data=job.job_data
                 PDEBUG.log("BeanStackQueue: job from {} data ({})".format(queue_name,self.job_data))
+                return(self.job)
             
         except:
             PDEBUG.log("BeanStackQueue: error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
+            return(None)
         
     def output(self,event):
         with self.client.using("master.output") as insterter:
