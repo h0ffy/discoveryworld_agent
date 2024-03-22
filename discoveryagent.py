@@ -58,7 +58,7 @@ class DiscoveryAgent:
         
         while 1:      
             tasks = task.recv("agent.scan")
-            if is tasks:
+            if tasks is not None:
                 for tasks in job:
                     PDEBUG.log("Main: recv\t\t OK")
                     scan_type = job.job_data.get("scan_type")
