@@ -20,6 +20,7 @@ from agent_scan.modules.geoip import *
 
 
 class DiscoveryAgent:
+    @staticmethod
     def banner():
     	print("\t*****************************************************************")
     	print("\t*\t\t\t\t\t\t\t\t*")
@@ -27,7 +28,7 @@ class DiscoveryAgent:
     	print("\t*\t\t\t\t\t\t\t\t*")
     	print("\t*****************************************************************")
     
-        
+    @staticmethod  
     def agent_scan(queue,scan_type,scan_data):
         if scan_type == "reverse-domain":
             ip = scan_data.get_key("IP")
@@ -48,7 +49,7 @@ class DiscoveryAgent:
     
 
 #### MAIN #####
-
+    @staticmethod
     def main():
         print("Starting discoveryworld agent\t\t")
         task = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
