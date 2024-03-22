@@ -13,6 +13,12 @@ BEANSTALK_SERVER = "127.0.0.1"
 BEANSTALK_PORT = 13120
 
 
+PROXY_ENABLE = False
+PROXY_LIST = [
+        { 'http' : 'http://127.0.0.1:80/', 'https' : 'https://127.0.0.1:443' },
+        { 'http' : 'http://127.0.0.1:80/', 'https' : 'https://127.0.0.1:443' }
+    ]
+
 #Internal use
 
 #DBSM = "mysql" # or scylladb s

@@ -8,7 +8,7 @@ import urllib, urllib2
 import logging
 from ../../..conf import *
 from ../../..debug import *
-import ip2domain
+#import ip2domain
 
 
 

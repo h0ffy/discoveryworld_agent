@@ -56,3 +56,33 @@ Whois Resources
 
     Search by domain, keyword, email address, company name.
 """
+import sys,os
+import random
+from urllib import request
+from ipwhois import IPWhois
+
+from ../../..conf import *
+from ../../..debug import *
+
+class Whois:
+	def __init__(self,ip):
+		self.ip = ip
+        self.proxy_index = random.randrange(0,len(conf.PROXY_LIST))
+		self.handler = request.ProxyHandler(conf.PROXY_LIST[self.proxy_index])
+    	self.run()
+	def __enter__(self):
+		return(self)
+	def __del__(self):
+		self.__exit__()
+	def __exit__(self):
+		self.domain = ""
+	def run(self):
+		self.obj = IPWhois(self.ip,proxy_opener = self.handler)
+        self.results = self.obj.lookup_rdap(depth=1)
+        return(self.results)
+    
+    
+    
+    
+
+

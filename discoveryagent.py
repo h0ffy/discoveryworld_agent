@@ -41,7 +41,9 @@ def agent_scan(queue,scan_type,scan_data):
         ip = scan_data.get_key("IP")
         result = GeoIP(ip)
         if result is not None:
-            queue.output('{ "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : "{}", "country" : "{}", "continent" : "{}", "timezone" : "{}" }'.format(ip,result.country,result.continent,result.timezone))
+            skelDict = [{ "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : result.country, "continent" : result.continent, "timezone" : result.timezone }]
+            resultDict = skelDict.update(result)
+            queue.output(resultDict)
 
 
 
