@@ -8,6 +8,7 @@ import re
 import urllib, urllib3
 import logging
 from geoip import geolite2
+from geoip import open_database
 from ..config import *
 
 
@@ -19,6 +20,7 @@ class GeoIP:
         self.country = None
         self.continent = None
         self.timezone = None
+        self.db = open_database(config.GEOIP_DB)
         self.run()
     def __enter__(self):
         return(self)
@@ -30,6 +32,8 @@ class GeoIP:
     
     def run(self):
         result  = geolite2.lookup(self.ip)
+    
+        
         if result is not None:
            self.country = result.country
            self.continent = result.continent
