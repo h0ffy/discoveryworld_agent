@@ -18,7 +18,7 @@ from beanstalk import *
 from agent_scan.modules.ip2domain import *
 from agent_scan.modules.geoip import * 
 
-logger = logging.logger(__name__)
+
 
 def banner():
 	print("\t*****************************************************************")
@@ -51,12 +51,13 @@ def agent_scan(queue,scan_type,scan_data):
 
 def main():
     print("Starting discoveryworld agent\t\t")
-    queue = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
+    task = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
     print("[OK]")
     PDEBUG.log("Main: Starting discoveryworld agent\t\t OK")
     
-    while 1:            
-        for queue.recv("agent.scan") in job:
+    while 1:      
+        tasks = task.recv("agent.scan")
+        for tasks in job:
             PDEBUG.log("Main: rec\t\t OK")
             scan_type = job.job_data.get("scan_type")
             scan_data = job.job_data.scan_data("scan_data")
@@ -66,8 +67,8 @@ def main():
         
         time.sleep(2)
     
-	sys.exit(0)
-	return(0)
+    sys.exit(0)
+    return(0)
 
 
 

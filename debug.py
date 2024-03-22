@@ -14,6 +14,6 @@ from conf import *
 class PDEBUG:
     @staticmethod
     def log(text):
-        if conf.DEBUG == True:
-            logging.DEBUG(text)
+        if DEBUG == True:
+            logging.log(logging.DEBUG, msg=text)
             print("{}\tDiscoveryAgent\t{}\t".format(text,strftime("%d %b %Y %H:%M:%S", gmtime())))

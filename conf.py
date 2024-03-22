@@ -12,6 +12,7 @@ DEBUG=True
 BEANSTALK_SERVER = "127.0.0.1"
 BEANSTALK_PORT = 13120
 
+LOG_FILE = "discoveryagent.log"
 
 PROXY_ENABLE = False
 PROXY_LIST = [

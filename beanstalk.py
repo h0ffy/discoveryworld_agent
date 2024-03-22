@@ -55,14 +55,14 @@ class BeanStackQueue:
             PDEBUG.log("BeanStackQueue: watch jobs from {}".format(queue_name,self.job_data))
         except:
             PDEBUG.log("BeanStackQueue: Error loading {} queue name [ERROR]".format(queue_name))
-            self.__exit__()
-            
-        for job in self.client.reserve_iter():
-            try:
+        
+        try:
+            for job in self.client.reserve_iter():
                 self.job_data=job.job_data
                 PDEBUG.log("BeanStackQueue: job from {} data ({})".format(queue_name,self.job_data))
-            except:
-                PDEBUG.log("BeanStackQueue: error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
+            
+        except:
+            PDEBUG.log("BeanStackQueue: error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
         
     def output(self,event):
         with self.client.using("master.output") as insterter:

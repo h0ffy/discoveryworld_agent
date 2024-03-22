@@ -1,2 +1,4 @@
 .spyproject
+discoveryagent.log
+*.log
 __pycache__

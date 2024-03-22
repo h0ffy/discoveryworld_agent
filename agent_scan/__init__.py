@@ -1,28 +1,7 @@
-#!/bin/env python3
+# -*- coding: utf-8 -*-
 """
-####
-  #####################################################
-  ####                DiscoveryWorld                 ##
-  ####                  agent_scan                   ##
-  ####           @JennyLab (Public Domain)           ##
-  #####################################################
-####
+Created on Fri Mar 22 03:00:34 2024
+
+@author: kitty
 """
 
-import sys
-import os
-import agent_scan
-
-
-
-
-def __main__():
-    agent = agent_scan
-    agent.agent_scan()
-
-
-
-
-
-if __name__ == "__main__":
-    __main__()
