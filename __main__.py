@@ -8,7 +8,7 @@ Created on Fri Mar 22 03:00:49 2024
 import discoveryagent
 
 if __name__ == "__main__":
-	banner()
+	DiscoveryAgent.banner()
 	#with daemon.DaemonContext():
-	main()
+	DiscoveryAgent.main()
 	
