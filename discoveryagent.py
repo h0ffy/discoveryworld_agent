@@ -60,7 +60,7 @@ class DiscoveryAgent:
             tasks = task.recv("agent.scan")
             if is tasks:
                 for tasks in job:
-                    PDEBUG.log("Main: rec\t\t OK")
+                    PDEBUG.log("Main: recv\t\t OK")
                     scan_type = job.job_data.get("scan_type")
                     scan_data = job.job_data.scan_data("scan_data")
                     PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
