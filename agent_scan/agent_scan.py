@@ -11,7 +11,7 @@
 
 import sys
 import os
-
+from ..conf import *
 
 
 class agent_scan:

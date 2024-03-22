@@ -5,11 +5,16 @@
 import sys,os,socket
 import re
 import urllib, urllib2
-import conf
+import logging
+from ../../..conf import *
+from ../../..debug import *
 import ip2domain
+
+
 
 class IP2Domain:
 	def __init__(self,ip):
+        logging.logger(__name__)
 		self.ip = ip
 		self.domains = []
 		self.run()
@@ -24,15 +29,18 @@ class IP2Domain:
 			i+=1
 	def run(self):
 		#self.ip2host()
+        PDEBUG.log("IP2Domain: Bing2IP {}".format(self.ip))
 		self.bing2ip()
+        PDEBUG.log("IP2Domain: crt.sh {}".format(self.ip))
+        self.crt_sh()
 
 	def bing2ip(self):
 			page = 0
-			uri_format = 'https://www.bing.com/search?q=IP%%3A%s&qs=n&FORM=PQRE&pq=IP%%3A%s&first=%d'	
+			uri_format = 'https://www.bing.com/search?q=IP%%3A{ip}&qs=n&FORM=PQRE&pq=IP%%3A{ip}&first={page}'	
 			i = 0	
 
 			for i in range(0,4):
-				uri = uri_format % (self.ip,self.ip,page)
+				uri = uri_format.format(ip=self.ip,page=page)
 				response = urllib2.urlopen(uri)
 				raw_html = response.read()
 				response.close()
@@ -51,7 +59,7 @@ class IP2Domain:
 			
 
 	def ip2host(self):
-			uri = 'http://www.ip2hosts.com/csv.php?ip=%s' % (self.ip)
+			uri = "http://www.ip2hosts.com/csv.php?ip={}".format(self.ip)
 			response = urllib2.urlopen(uri)
 			raw_csv = response.read()
 			response.close()
@@ -62,5 +70,19 @@ class IP2Domain:
 					self.domains.append(domain)		
 			
 
+
+    def crt_sh(self):
+		uri = 'https://crt.sh/?q={}'.format(self.ip)
+		response = urllib3.request("GET",uri)
+		html = resp.data
+        soup = BetifoulSoup(html,'html.parser')
+        soup.find('table')
+		for row in table.find_all('tr'):
+            cols = row.find_all('td')
+            if cols[4] != self.ip
+                self.domains.append(cols[4])
+            for domain in cols[5].split("<BR>"):
+                if domain != self.ip    
+                    self.domains.append(domain)
 
 

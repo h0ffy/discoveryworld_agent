@@ -12,3 +12,4 @@ webtech
 httpx
 beautifulsoup4 
 pandas
+pystalk
