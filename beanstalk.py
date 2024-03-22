@@ -82,6 +82,7 @@ class BeanStackQueue:
             inserter.put_job(json.dumps(event))    
     
     def report(self,event):
+        PDEBUG.log("BeanStackQueue: report {}".format(event))
         with self.client.using("master.output") as inserter:
             inserter.put_job(json.dumps(event))
             

@@ -45,6 +45,7 @@ class DiscoveryAgent:
             if result is not None:
                 skelDict = { "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : result.country, "continent" : result.continent, "timezone" : result.timezone }
                 #taskqueue.report(skelDict)
+                print(skelDict)
                 return(skelDict) 
     
 
@@ -56,8 +57,11 @@ class DiscoveryAgent:
         print("[OK]")
         PDEBUG.log("Main: Starting discoveryworld agent\t\t [OK]")
         
-        #taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
-        
+       
+
+        taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
+       
+
         while 1:      
             job = taskqueue.recv("agent.scan")
             if job is not None:
