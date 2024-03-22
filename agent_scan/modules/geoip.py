@@ -15,7 +15,6 @@ from ..config import *
 
 class GeoIP:
     def __init__(self,ip):
-        logging.logger(__name__)
         self.ip = ip
         self.country = None
         self.continent = None

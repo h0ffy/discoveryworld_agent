@@ -11,6 +11,7 @@ import conf
 import daemon
 import logging
 import logger
+import json
 #import ip2domain
 #from agent import ClientAgent
 from debug import * 
@@ -31,7 +32,7 @@ class DiscoveryAgent:
     @staticmethod  
     def agent_scan(queue,scan_type,scan_data):
         if scan_type == "reverse-domain":
-            ip = scan_data.get_key("IP")
+            ip = scan_data
             domains_result = ip2domain.IP2Domain(ip)
             domains_result.domains = list(set(newIP2Domain.domains))
             if domains.result is not None:
@@ -39,7 +40,7 @@ class DiscoveryAgent:
                     for domain in domains.result.domains:
                         queue.output('{ "agent" : "null" , "plugin" : "agent_scan.ip2domain", "ip" : "{}", "domain" : "{}" }'.format(ip,domain))
         elif scan_type == "geoip":
-            ip = scan_data.get_key("IP")
+            ip = scan_data
             result = GeoIP(ip)
             if result is not None:
                 skelDict = [{ "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : result.country, "continent" : result.continent, "timezone" : result.timezone }]
@@ -60,13 +61,17 @@ class DiscoveryAgent:
         
         while 1:      
             tasks = task.recv("agent.scan")
-            if tasks is not None:
-                for tasks in job:
-                    PDEBUG.log("Main: recv\t\t OK")
-                    scan_type = job.job_data.get("scan_type")
-                    scan_data = job.job_data.scan_data("scan_data")
-                    PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
-                    agent_scan(queue,scan_type,scan_data)
+            print("\n\n\n\n")
+            print(tasks)
+            print("\n\n\n")
+            if tasks.job_data is not None:
+                PDEBUG.log("Main: recv\t\t OK")
+                data = dict(json.loads(tasks.job_data))
+                print(data)
+                scan_type = data.get("scan_type")
+                scan_data = data.get("scan_data")
+                PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
+                DiscoveryAgent.agent_scan(task,scan_type,scan_data)
                 #done
                 
             time.sleep(2)
