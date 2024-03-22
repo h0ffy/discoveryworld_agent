@@ -67,15 +67,22 @@ from ../../..debug import *
 class Whois:
 	def __init__(self,ip):
 		self.ip = ip
-        self.proxy_index = random.randrange(0,len(conf.PROXY_LIST))
-		self.handler = request.ProxyHandler(conf.PROXY_LIST[self.proxy_index])
-    	self.run()
+        if conf.PROXY_ENABLE == True:
+            self.proxy_index = random.randrange(0,len(conf.PROXY_LIST))
+            self.handler = request.ProxyHandler(conf.PROXY_LIST[self.proxy_index])
+        else:
+            self.proxy_index = 0
+            self.handler = None
+    	
+        self.run()
 	def __enter__(self):
 		return(self)
 	def __del__(self):
 		self.__exit__()
 	def __exit__(self):
-		self.domain = ""
+		self.ip = ""
+        
+        
 	def run(self):
 		self.obj = IPWhois(self.ip,proxy_opener = self.handler)
         self.results = self.obj.lookup_rdap(depth=1)
