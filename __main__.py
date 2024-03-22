@@ -5,7 +5,7 @@ Created on Fri Mar 22 03:00:49 2024
 @author: kitty
 """
 
-import discoveryagent
+from discoveryagent import *
 
 if __name__ == "__main__":
 	DiscoveryAgent.banner()
