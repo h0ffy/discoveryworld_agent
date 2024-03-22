@@ -43,7 +43,7 @@ class BeanStackQueue:
         except:
             self.client = None
             PDEBUG.log("BeanStackQueue: Error connect to {} server on port {}".format(self.server,self.port))
-            self.__exit__()
+            #self.__exit__()
             
         
         PDEBUG.log("BeanStackQueue: Connected found to {} server on port {}".format(self.server,self.port))
@@ -53,26 +53,35 @@ class BeanStackQueue:
     def recv(self,queue_name):
         try:
             self.client.watch(queue_name)
-            PDEBUG.log("BeanStackQueue: watch jobs from {}".format(queue_name,self.job_data))
+            PDEBUG.log("BeanStackQueue: watch jobs from {} [OK]".format(queue_name,self.job_data))
         except:
             PDEBUG.log("BeanStackQueue: Error loading {} queue name [ERROR]".format(queue_name))
         
         try:
+            #for job in self.client.reserve_iter():
             for job in self.client.reserve_iter():
                 self.job = job
                 self.job_data=job.job_data
-                PDEBUG.log("BeanStackQueue: job from {} data ({})".format(queue_name,self.job_data))
+                self.job_id=job.job_id
+                self.client.bury_job(self.job_id)
+                #  self.client.execute_job(job)
+                PDEBUG.log("BeanStackQueue: job {} from {} data ({}) [OK]".format(self.job_id,queue_name,self.job_data))
                 return(self.job)
             
         except:
             PDEBUG.log("BeanStackQueue: error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
             return(None)
-    
+
+    def release(self,job_id):
+            #self.client.release_job(job_id)
+            self.client.delete_job(job_id)
+            return(0) 
+
     def test_task(self,event):
         with self.client.using("agent.scan") as inserter:
             inserter.put_job(json.dumps(event))    
     
-    def output(self,event):
+    def report(self,event):
         with self.client.using("master.output") as inserter:
             inserter.put_job(json.dumps(event))
             

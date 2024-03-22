@@ -16,4 +16,4 @@ class PDEBUG:
     def log(text):
         if DEBUG == True:
             logging.log(logging.DEBUG, msg=text)
-            print("{}\tDiscoveryAgent\t{}\t".format(text,strftime("%d %b %Y %H:%M:%S", gmtime())))
+            print("{} DiscoveryAgent {}\t".format(strftime("%d %b %Y %H:%M:%S", gmtime()),text))
