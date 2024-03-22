@@ -56,6 +56,8 @@ class DiscoveryAgent:
         print("[OK]")
         PDEBUG.log("Main: Starting discoveryworld agent\t\t OK")
         
+        task.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
+        
         while 1:      
             tasks = task.recv("agent.scan")
             if tasks is not None:

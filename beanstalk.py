@@ -67,7 +67,12 @@ class BeanStackQueue:
         except:
             PDEBUG.log("BeanStackQueue: error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
             return(None)
-        
+    
+    def test_task(self,event):
+        with self.client.using("agent.scan") as insterter:
+            inserter.put_job(json.dumps(event))    
+    
     def output(self,event):
         with self.client.using("master.output") as insterter:
             inserter.put_job(json.dumps(event))
+            
