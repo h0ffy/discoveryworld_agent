@@ -69,10 +69,10 @@ class BeanStackQueue:
             return(None)
     
     def test_task(self,event):
-        with self.client.using("agent.scan") as insterter:
+        with self.client.using("agent.scan") as inserter:
             inserter.put_job(json.dumps(event))    
     
     def output(self,event):
-        with self.client.using("master.output") as insterter:
+        with self.client.using("master.output") as inserter:
             inserter.put_job(json.dumps(event))
             
