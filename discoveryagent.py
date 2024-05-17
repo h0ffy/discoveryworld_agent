@@ -17,8 +17,12 @@ import json
 from debug import * 
 from beanstalk import *
 from agent_scan.modules.ip2domain import *
+<<<<<<< HEAD
 from agent_scan.modules.geoip import * 
 from agent_scan.modules.subdomains import *
+=======
+from agent_scan.modules.discoverygeoip import * 
+>>>>>>> a22c3020e9cd2285ab3aead8f2a02d91df40317a
 
 
 class DiscoveryAgent:
@@ -31,19 +35,25 @@ class DiscoveryAgent:
     	print("\t*****************************************************************")
     
     @staticmethod  
+<<<<<<< HEAD
     def agent_scan(queue,scan_type,scan_data):
         if scan_type == "domain-reverse":
+=======
+    def agent_scan(taskqueue,scan_type,scan_data):
+        if scan_type == "reverse-domain":
+>>>>>>> a22c3020e9cd2285ab3aead8f2a02d91df40317a
             ip = scan_data
             domains_result = ip2domain.IP2Domain(ip)
             domains_result.domains = list(set(newIP2Domain.domains))
             if domains.result is not None:
                 if domains.result.domains is not None:
                     for domain in domains.result.domains:
-                        queue.output('{ "agent" : "null" , "plugin" : "agent_scan.ip2domain", "ip" : "{}", "domain" : "{}" }'.format(ip,domain))
+                        task.output('{ "agent" : "null" , "plugin" : "agent_scan.ip2domain", "ip" : "{}", "domain" : "{}" }'.format(ip,domain))
         elif scan_type == "geoip":
             ip = scan_data
-            result = GeoIP(ip)
+            result = DiscoveryGeoIP(ip)
             if result is not None:
+<<<<<<< HEAD
                 skelDict = [{ "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : result.country, "continent" : result.continent, "timezone" : result.timezone }]
                 resultDict = skelDict.update(result)
                 queue.output(resultDict)
@@ -75,32 +85,42 @@ class DiscoveryAgent:
                 
                 
                 
+=======
+                skelDict = { "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : result.country, "continent" : result.continent, "timezone" : result.timezone }
+                #taskqueue.report(skelDict)
+                print(skelDict)
+                return(skelDict) 
+    
+>>>>>>> a22c3020e9cd2285ab3aead8f2a02d91df40317a
 
 #### MAIN #####
     @staticmethod
     def main():
         print("Starting discoveryworld agent\t\t")
-        task = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
+        taskqueue = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
         print("[OK]")
-        PDEBUG.log("Main: Starting discoveryworld agent\t\t OK")
+        PDEBUG.log("Main: Starting discoveryworld agent\t\t [OK]")
         
-        task.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
-        
+       
+
+        taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
+       
+
         while 1:      
-            tasks = task.recv("agent.scan")
-            print("\n\n\n\n")
-            print(tasks)
-            print("\n\n\n")
-            if tasks.job_data is not None:
-                PDEBUG.log("Main: recv\t\t OK")
-                data = dict(json.loads(tasks.job_data))
-                print(data)
-                scan_type = data.get("scan_type")
-                scan_data = data.get("scan_data")
-                PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
-                DiscoveryAgent.agent_scan(task,scan_type,scan_data)
+            job = taskqueue.recv("agent.scan")
+            if job is not None:
+                if job.job_data is not None:
+                    PDEBUG.log("Main: recv\t\t OK")
+                    data = dict(json.loads(job.job_data))
+                    scan_type = data.get("scan_type")
+                    scan_data = data.get("scan_data")
+                    PDEBUG.log("Main: Init scan job {} with data {}".format(scan_type,scan_data))
+                    result = DiscoveryAgent.agent_scan(taskqueue,scan_type,scan_data)
+                    taskqueue.report(result)
+                    taskqueue.release(int(job.job_id))
                 #done
-                
+                #taskqueue.report(result)
+
             time.sleep(2)
         
         sys.exit(0)
