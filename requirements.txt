@@ -13,3 +13,7 @@ beautifulsoup4
 pandas
 pystalk
 ipwhois
+argparse
+dnspython
+requests
+sublist3r

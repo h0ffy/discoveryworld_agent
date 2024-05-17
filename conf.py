@@ -31,9 +31,9 @@ PROXY_LIST = [
 
 
 
-import os,sys
+import os,sys,platform
 #sys.path.insert(0, './dist/whatweb')
-strCurrentDir = os.path.dirname(os.path.abspath(__file__))
+CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert( 0, os.path.dirname(os.path.abspath(__file__)))
 

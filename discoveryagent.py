@@ -18,6 +18,7 @@ from debug import *
 from beanstalk import *
 from agent_scan.modules.ip2domain import *
 from agent_scan.modules.geoip import * 
+from agent_scan.modules.subdomains import *
 
 
 class DiscoveryAgent:
@@ -31,7 +32,7 @@ class DiscoveryAgent:
     
     @staticmethod  
     def agent_scan(queue,scan_type,scan_data):
-        if scan_type == "reverse-domain":
+        if scan_type == "domain-reverse":
             ip = scan_data
             domains_result = ip2domain.IP2Domain(ip)
             domains_result.domains = list(set(newIP2Domain.domains))
@@ -46,8 +47,34 @@ class DiscoveryAgent:
                 skelDict = [{ "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : result.country, "continent" : result.continent, "timezone" : result.timezone }]
                 resultDict = skelDict.update(result)
                 queue.output(resultDict)
-    
-    
+        
+        elif scan_type == "subdomain-wordlist":
+            objSubDomain = SubDomains(scan_data))
+            objSubDomain.run(bruteforce=False)
+            strDomains = None
+            if objSubDomain.result is not None:
+                for subdomain in objSubDomain.result:
+                    strDomains+=str("{};".format(subdomain))
+                
+                strDomains =strDomains.removesuffix(';')
+                queue.output({"agent" : "null", "plugin" : "agent_scan.subdomain-wordlist",  "domain": scan_data, "subdomains" : strDomains})
+        elif scan_type == "subdomain-bruteforce":
+            objSubDomain = SubDomains(scan_data))
+            objSubDomain.run(bruteforce=True)
+            strDomains = None
+            if objSubDomain.result is not None:
+                for subdomain in objSubDomain.result:
+                    strDomains+=str("{};".format(subdomain))
+                
+                strDomains=strDomains.removesuffix(';')
+                queue.output({"agent" : "null", "plugin" : "agent_scan.subdomain-bruteforce",  "domain": scan_data, "subdomains" : strDomains})
+        else:
+            nop=0x90
+                
+            
+                
+                
+                
 
 #### MAIN #####
     @staticmethod

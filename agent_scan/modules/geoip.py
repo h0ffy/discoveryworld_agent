@@ -20,7 +20,7 @@ class GeoIP:
         self.country = None
         self.continent = None
         self.timezone = None
-        self.db = open_database(config.GEOIP_DB)
+        self.db = open_database(GEOIP_DB)
         self.run()
     def __enter__(self):
         return(self)
@@ -31,7 +31,7 @@ class GeoIP:
     
     
     def run(self):
-        result  = geolite2.lookup(self.ip)
+        result  = self.db.lookup(self.ip)
     
         
         if result is not None:
