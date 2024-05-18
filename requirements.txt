@@ -14,10 +14,8 @@ beautifulsoup4
 pandas
 pystalk
 ipwhois
-<<<<<<< HEAD
 argparse
 dnspython
 requests
 sublist3r
-=======
->>>>>>> a22c3020e9cd2285ab3aead8f2a02d91df40317a
+mysql.connector

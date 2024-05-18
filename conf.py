@@ -23,8 +23,8 @@ PROXY_LIST = [
 #Internal use
 
 #DBSM = "mysql" # or scylladb s
-#DBHOST="127.0.0.1"
-#DBPORT="3306"
+DBHOST="127.0.0.1"
+DBPORT="3306"
 #DBUSER="root"
 #DBPASS="jennylab"
 #DBNAME="discoveryworld"

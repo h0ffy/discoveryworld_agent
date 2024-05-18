@@ -99,6 +99,6 @@ class ClientAgent(threading.Thread):
 		except:
 			if self.sockstat==1:
 				self.clientsock.close()
-			print "Error 1"			
+			print("Error 1")
 			pass
 

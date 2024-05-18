@@ -15,7 +15,7 @@ class BeanStackQueue:
     def __init__(self,server,port,auto=True):
         self.status = auto
         self.client = None
-        self.output = None
+        #self.output = None
         self.job_data = None
         self.job = None
         self.server = server
@@ -31,6 +31,9 @@ class BeanStackQueue:
             self.status = False
             self.client.release()
             self.client = None
+
+    def output(self,outline):
+        self.report(outline)
 
     def run(self):
         PDEBUG.log("Running BeanStackQueue.run()")
@@ -73,16 +76,17 @@ class BeanStackQueue:
             return(None)
 
     def release(self,job_id):
-            #self.client.release_job(job_id)
-            self.client.delete_job(job_id)
-            return(0) 
+        #self.client.release_job(job_id)
+        self.client.delete_job(job_id)
 
     def test_task(self,event):
+        PDEBUG.log("BeanStackQueue: test_task {}".format(event))
+        self.client.use("agent.scan")
         with self.client.using("agent.scan") as inserter:
             inserter.put_job(json.dumps(event))    
     
     def report(self,event):
         PDEBUG.log("BeanStackQueue: report {}".format(event))
+        self.client.use("master.output")
         with self.client.using("master.output") as inserter:
             inserter.put_job(json.dumps(event))
-            

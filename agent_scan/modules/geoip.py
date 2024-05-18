@@ -17,11 +17,12 @@ from ..config import *
 class GeoIP:
     def __init__(self,ip):
         self.ip = ip
-        self.country = None
-        self.continent = None
-        self.timezone = None
-        self.db = open_database(GEOIP_DB)
-        self.run()
+        self.country = "ANY"
+        self.continent = "ANY"
+        self.timezone = "ANY"
+        #self.db = open_database(GEOIP_DB)
+        #self.run()
+
     def __enter__(self):
         return(self)
     def __del__(self):
