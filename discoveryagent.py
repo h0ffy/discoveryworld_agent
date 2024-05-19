@@ -101,6 +101,7 @@ class DiscoveryAgent:
             #taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
             bdata="eyAiZGF0YV90eXBlIiA6ICJzdWJkb21haW5zIiwgIkRPTUFJTiIgOiAiamVubnlsYWIubWUiLCAiU1VCT0RPTUFJTlMiIDogInZwbi5qZW5ueWxhYi5tZSIsICJJUCIgOiAiMS4xLjEuMSIgfQ=="
             taskqueue.output({ "type" : "test", "data" : bdata })
+        sys.exit(0)
 
         """
         taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
