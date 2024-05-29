@@ -102,9 +102,29 @@ class DiscoveryAgent:
 
         PDEBUG.log("[OK]")
         PDEBUG.log("Main: Starting discoveryworld agent\t\t [OK]")
+<<<<<<< HEAD
         taskqueue.client.watch("agent.scan")
         BeanStackQueue.addReportRaw2Test(taskqueue,2)
         #taskqueue.client.ignore("default")
+=======
+        
+       
+        for i in range(0,200000):
+            #taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
+            bdata="eyAiZGF0YV90eXBlIiA6ICJzdWJkb21haW5zIiwgIkRPTUFJTiIgOiAiamVubnlsYWIubWUiLCAiU1VCT0RPTUFJTlMiIDogInZwbi5qZW5ueWxhYi5tZSIsICJJUCIgOiAiMS4xLjEuMSIgfQ=="
+            taskqueue.output({ "type" : "test", "data" : bdata })
+        sys.exit(0)
+
+        """
+        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+        """
+
+>>>>>>> d3b2c3af5265e2aea086a1444a1aa53f08f8da95
         while 1:      
             job = taskqueue.recv("agent.scan")
             if job is not None:
