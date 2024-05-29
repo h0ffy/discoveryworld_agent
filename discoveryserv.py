@@ -17,6 +17,8 @@ from beanstalk import *
 import base64
 from mysql.connector import connection
 import mysql.connector
+#from cassandra.cluster import Cluster
+#from cassandra import ConsistencyLevel
 
 class DiscoveryServ:
     @staticmethod

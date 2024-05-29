@@ -26,3 +26,5 @@ tqdm
 click
 asyncio
 winloop
+cassandra-driver
+lz4

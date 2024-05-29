@@ -3,7 +3,7 @@
 #	Written by h0ffy / JennyLab
 #   GNU GPL 3.0 CopyLeft 2024 @JennyLab
 
-import sys,os
+import sys,os,platform
 #import urllib, urllib2
 import time
 import threading
@@ -79,7 +79,15 @@ class DiscoveryAgent:
                     strDomains+=str("{};".format(subdomain))
                 
                 strDomains=strDomains.removesuffix(';')
-                taskqueue.output({"agent" : "null", "plugin" : "agent_scan.subdomain-bruteforce",  "domain": scan_data, "subdomains" : strDomains})
+                taskqueue.output({"agent" : platform.node(), "plugin" : "agent_scan.subdomain-bruteforce",  "domain": scan_data, "subdomains" : strDomains})
+
+        elif scan_type == "subdomain-crtsh":
+            objSubDomain = SubDomains(scan_data)
+            objSubDomain.crt_sh2(scan_data)
+            for domain in objSubDomain.domains:
+                taskqueue.output({"agent": platform.node(), "plugin": "agent_scan.crlsh", "domain": scan_data,"subdomains": domain})
+
+
         else:
             nop=0x90
                 
@@ -102,12 +110,9 @@ class DiscoveryAgent:
 
         PDEBUG.log("[OK]")
         PDEBUG.log("Main: Starting discoveryworld agent\t\t [OK]")
-<<<<<<< HEAD
         taskqueue.client.watch("agent.scan")
         BeanStackQueue.addReportRaw2Test(taskqueue,2)
         #taskqueue.client.ignore("default")
-=======
-        
        
         for i in range(0,200000):
             #taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
@@ -124,7 +129,6 @@ class DiscoveryAgent:
         taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
         """
 
->>>>>>> d3b2c3af5265e2aea086a1444a1aa53f08f8da95
         while 1:      
             job = taskqueue.recv("agent.scan")
             if job is not None:

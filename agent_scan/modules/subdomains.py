@@ -46,7 +46,20 @@ class SubDomains:
     def crt_sh(self):
         uri = 'https://crt.sh/?q={}'.format(self.domain)
         response = urllib3.request("GET",uri)
-        html = resp.data
+        html = response.data
+        soup = BetifoulSoup(html,'html.parser')
+        soup.find('table')
+        for row in table.find_all('tr'):
+            cols = row.find_all('td')
+
+            self.domains.append(cols[4])
+            for domain in cols[5].split("<BR>"):
+                self.domains.append(domain)
+
+    def crt_sh2(self,domain):
+        uri = 'https://crt.sh/?q={}'.format(domain)
+        response = urllib3.request("GET",uri)
+        html = response.data
         soup = BetifoulSoup(html,'html.parser')
         soup.find('table')
         for row in table.find_all('tr'):

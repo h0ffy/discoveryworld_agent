@@ -11,8 +11,8 @@ from monitor_syslog import *
 if __name__ == "__main__":
 #	DiscoveryAgent.banner()
 #	DiscoveryServ.main()
-	MonitorLog.read_file(sys.argv[1])
-	sys.exit(0)
+	#MonitorLog.read_file(sys.argv[1])
+	#sys.exit(0)
 
 	if len(sys.argv) <= 1:
 		DiscoveryAgent.main()
@@ -25,7 +25,8 @@ if __name__ == "__main__":
 			DiscoveryServ.main()
 		elif arg1 == "insert":
 			BeanStackQueue.beanstalk_cli(cmd=sys.argv[2],data=sys.argv[3])
-			sys.exit(0)
+		elif arg1 == "monitor":
+			MonitorLog.read_file(sys.argv[2])
 		else:
 			DiscoveryAgent.main()
 
