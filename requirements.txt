@@ -19,3 +19,10 @@ dnspython
 requests
 sublist3r
 mysql.connector
+aiodns
+async_dns
+#uvloop
+tqdm
+click
+asyncio
+winloop

@@ -12,6 +12,7 @@ import logging
 import logger
 import json
 import base64
+import tldextract
 #import ip2domain
 #from agent import ClientAgent
 from debug import * 
@@ -42,8 +43,11 @@ class DiscoveryAgent:
             if domains.result is not None:
                 if domains.result.domains is not None:
                     for domain in domains.result.domains:
-                        bdata="eyAiZGF0YV90eXBlIiA6ICJzdWJkb21haW5zIiwgIkRPTUFJTiIgOiAiamVubnlsYWIubWUiLCAiU1VCT0RPTUFJTlMiIDogInZwbi5qZW5ueWxhYi5tZSIsICJJUCIgOiAiMS4xLjEuMSIgfQ=="
-                        taskqueue.output({ "type" : "subdomains", "data" : bdata,  "agent" : "null" , "plugin" : "agent_scan.ip2domain", "ip" : ip, "domain" : domain })
+                        sTLD = tldextract.extract(domain).registered_domain
+                        y_evout = '{ "type": "subdomains", "DOMAIN": "{}", "SUBDOMAIN" : "{}", "IP" : "{}", "agent": "null", "plugin": "agent_scan.ip2domain" }'
+                        y_evout = { 'type' : 'reverse-domain', 'data' : str(base64.encode(y_evout.format(sTLD,domain,ip))) }
+                        taskqueue.output(y_evout)
+
         elif scan_type == "geoip":
             ip = scan_data
             result = dict({ "country" : "US", "continent" : "ANY", "timezone" : "ANY" , "IP" : "0.0.0.0" })
@@ -53,7 +57,6 @@ class DiscoveryAgent:
             continent = "ANY" # result.continent
             country = "ANY" # result.country
             timezone = "ANY" # result.timezone
-            bdata="eyAiZGF0YV90eXBlIiA6ICJzdWJkb21haW5zIiwgIkRPTUFJTiIgOiAiamVubnlsYWIubWUiLCAiU1VCT0RPTUFJTlMiIDogInZwbi5qZW5ueWxhYi5tZSIsICJJUCIgOiAiMS4xLjEuMSIgfQ=="
             taskqueue.output({ "type" : "geoip", "data" : bdata, "agent" : "null", "plugin" : "agent_scan.geoip", "ip" : ip, "country" : country, "continent" : continent, "timezone" : timezone })
 
         
@@ -64,7 +67,7 @@ class DiscoveryAgent:
             if objSubDomain.result is not None:
                 for subdomain in objSubDomain.result:
                     strDomains+=str("{};".format(subdomain))
-                
+
                 strDomains =strDomains.removesuffix(';')
                 taskqueue.output({"agent" : "null", "plugin" : "agent_scan.subdomain-wordlist",  "domain": scan_data, "subdomains" : strDomains})
         elif scan_type == "subdomain-bruteforce":
@@ -91,31 +94,20 @@ class DiscoveryAgent:
 #### MAIN #####
     @staticmethod
     def main():
+        return(DiscoveryAgent.queue_main())
+    @staticmethod
+    def queue_main():
         print("Starting discoveryworld agent\t\t")
         taskqueue = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
-        print("[OK]")
+
+        PDEBUG.log("[OK]")
         PDEBUG.log("Main: Starting discoveryworld agent\t\t [OK]")
-        
-       
-        for i in range(0,200000):
-            #taskqueue.test_task({"scan_type" : "geoip", "scan_data" : "8.8.8.8" })
-            bdata="eyAiZGF0YV90eXBlIiA6ICJzdWJkb21haW5zIiwgIkRPTUFJTiIgOiAiamVubnlsYWIubWUiLCAiU1VCT0RPTUFJTlMiIDogInZwbi5qZW5ueWxhYi5tZSIsICJJUCIgOiAiMS4xLjEuMSIgfQ=="
-            taskqueue.output({ "type" : "test", "data" : bdata })
-
-        """
-        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
-        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
-        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
-        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
-        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
-        taskqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
-        """
-
+        taskqueue.client.watch("agent.scan")
+        BeanStackQueue.addReportRaw2Test(taskqueue,2)
+        #taskqueue.client.ignore("default")
         while 1:      
             job = taskqueue.recv("agent.scan")
             if job is not None:
-
-
                 if job.job_data is not None:
                     PDEBUG.log("Main: recv\t\t OK")
                     data = dict(json.loads(job.job_data))
@@ -149,4 +141,6 @@ class DiscoveryAgent:
         sys.exit(0)
         return(0)
     
+
+
 

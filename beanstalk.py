@@ -7,6 +7,7 @@ Created on Thu Mar 21 23:06:03 2024
 
 from pystalk import BeanstalkClient
 import json
+import base64
 
 from conf import *
 from debug import *
@@ -33,6 +34,7 @@ class BeanStackQueue:
             self.client = None
 
     def output(self,outline):
+        print(outline)
         self.report(outline)
 
     def run(self):
@@ -90,3 +92,29 @@ class BeanStackQueue:
         self.client.use("master.output")
         with self.client.using("master.output") as inserter:
             inserter.put_job(json.dumps(event))
+
+    @staticmethod
+    def addReportRaw2Test(tqueue,ncount):
+        for i in range(1,ncount):
+            bdata="eyAiZGF0YV90eXBlIiA6ICJzdWJkb21haW5zIiwgIkRPTUFJTiIgOiAiamVubnlsYWIubWUiLCAiU1VCT0RPTUFJTlMiIDogInZwbi5qZW5ueWxhYi5tZSIsICJJUCIgOiAiMS4xLjEuMSIgfQ=="
+            tqueue.output({ "type" : "test", "data" : bdata })
+
+
+    @staticmethod
+    def addTaskRaw2Text(tqueue,ncount):
+        for i in range(1,ncount):
+            tqueue.test_task({"scan_type": "geoip", "scan_data": "8.8.8.8"})
+
+
+
+    @staticmethod
+    def mkevent(type,data):
+        return({'type' : type, 'data': str(base64.encode(data)) })
+
+
+    @staticmethod
+    def beanstalk_cli(cmd,data):
+        cli_client = BeanstalkClient("127.0.0.1",13120)
+        #task = cli_client.use("agent.scan")
+        with cli_client.using("agent.scan") as inserter:
+            inserter.put_job(json.dumps({ "scan_type" : cmd, "scan_data" : data }))

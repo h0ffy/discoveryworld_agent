@@ -57,7 +57,7 @@ class DiscoveryServ:
                     pass
 
                 try:
-                    str_subdomain = data_json["SUBODOMAINS"]
+                    str_subdomain = data_json["SUBDOMAINS"]
                 except:
                     str_subdomain = "ERROR"
                     pass
