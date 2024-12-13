@@ -25,6 +25,7 @@ async_dns
 tqdm
 click
 asyncio
-winloop
+#winloop
 cassandra-driver
 lz4
+iffaddr

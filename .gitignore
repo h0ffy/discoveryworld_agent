@@ -1,7 +1,7 @@
 .spyproject
 .venv
 .venv/*
-.venv/
+.venv/*.*
 .vscode
 .vscode/*
 discoveryagent.log
