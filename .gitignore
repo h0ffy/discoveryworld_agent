@@ -1,4 +1,9 @@
 .spyproject
+.venv
+.venv/*
+.venv/
+.vscode
+.vscode/*
 discoveryagent.log
 *.log
 __pycache__
