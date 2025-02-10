@@ -28,11 +28,26 @@ class MonitorLog():
 
     @staticmethod
     def agent_log(sensor,type,data):
+        """
+        @brief Process agent log data
+        @param sensor: str, sensor name
+        @param type: str, data type
+        @param data: str, data content
+        @return None
+        """
+        #print("Log data: {} {} {}".format(sensor,type,data))
         taskqueue = BeanStackQueue(conf.BEANSTALK_SERVER,conf.BEANSTALK_PORT)
         taskqueue.output({ "sensor" : sensor, "type" : type, "data" : data })
 
     @staticmethod
     def read_file(file_path):
+        """
+        @brief Read log file and analyze it for regular expressions
+        @param file_path: str, path to log file
+        @return None
+        """
+        file_hashes
+
         md5hash = hashlib.md5()
         t_md5 = []
         regex_list = [{ "id" : 0, "regex" : r"^(?P<moth>\w{3})\s(?P<day>\d{1,2})\s(?P<full_hour>\d{1,2}:\d{1,2}:\d{1,2})\s(?P<author>\S+)\s(?P<proc_name>\S+)\[(?P<pid>\d+)\]:\s(?P<agent_name>\S+)\|(?P<type>\S+)\|(?P<data>\S+)$", "plugin" : "Agent Query", "function" : MonitorLog.agent_log},
@@ -53,12 +68,12 @@ class MonitorLog():
             start_time = MonitorLog.execution_timer()
             current_line = 0
             seek = 0
-
-
-
             executed=False
-            with open(file_path, "r") as f:
-                while True:
+
+            try:
+
+                with open(file_path, "r") as f:
+                  while True:
                     if executed==True:
                         time.sleep(1)
                     else:
@@ -117,14 +132,10 @@ class MonitorLog():
                         except:
                             print("Log file read line error")
 
-
-
-
-
-
-
-
-
+            except Exception as e:
+                PDEBUG.log(f"MonitorLog::read_file({file_path}) -> {e}")
+                pass
+        
 
 
 

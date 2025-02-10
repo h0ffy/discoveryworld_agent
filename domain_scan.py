@@ -218,6 +218,24 @@ class DNSQueryLoop:
 
 """
 class DNSLoopStartup:
+    """
+    @brief      This Class is to Dns Loop Callback
+    @param      name (name of the domain)
+                nameservers (nameservers of the domain)
+                loop (asyncio event loop)
+                resolver (aiodns resolver object)
+                tasks (list of tasks)
+                future (list of future)
+                records (list of records)
+                domain (domain name)
+                domain_name (domain name)
+                domain_to_brute (domain to brute)
+                result (result of the query)
+                exc (exception)
+                errno (error number)
+    """
+
+
     def __init__(self):
         self.name = ""
         self.nameservers = ['127.0.0.1','1.1.1.1','8.8.8.8']

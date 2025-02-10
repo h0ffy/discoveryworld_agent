@@ -13,5 +13,5 @@ printf "Install golang\t\t\t"
 sudo apt-get -yfq install golang 2>&1 1>>/dev/null && echo "[OK]" || echo "[ERROR]"
 
 printf "Install pip requirements.txt\t"
-sudo pip install --break-system-packages --no-color --no-python-version-warning --root-user-action=ignore -r requirements.txt 1>&2 2>&1  1>>/dev/null && echo "[OK]" || echo "[ERROR]"
-
+#sudo pip install --break-system-packages --no-color --no-python-version-warning --root-user-action=ignore -r requirements.txt 1>&2 2>&1  1>>/dev/null && echo "[OK]" || echo "[ERROR]"
+sudo python3 -m venv

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #	DiscoveryWorld Agent
-#	Written by h0ffy / JennyLab
-#   GNU GPL 3.0 CopyLeft 2024 @JennyLab
+#	Written by Alberto Garcia de Dios a.k.a @h0ffy / JennyLab
+#   CopyRight 2025 @JennyLab
+#
 
 import sys,os
-#import urllib, urllib2
 import time
 import threading
 import conf
@@ -20,9 +20,26 @@ import mysql.connector
 #from cassandra.cluster import Cluster
 #from cassandra import ConsistencyLevel
 
+
 class DiscoveryServ:
+    """
+    A class used to represent the Discovery Service.
+    Methods
+    -------
+    banner():
+        Prints the banner for the DiscoveryWorld Agent.
+    out_mydb(sql_query, sql_data):
+        Executes an SQL query with the provided data and commits the transaction.
+    server_task(taskqueue, scan_type, scan_data):
+        Processes the scan task based on the scan type and scan data, and inserts the results into the database.
+    main():
+        The main method to start the discovery world server, process tasks from the task queue, and handle scan jobs.
+    """
+
+
     @staticmethod
     def banner():
+        """This static methods to print banner"""
     	print("\t*****************************************************************")
     	print("\t*\t\t\t\t\t\t\t\t*")
     	print("\t*\t\t\tDiscoveryWorld Agent\t\t\t*")
@@ -31,6 +48,12 @@ class DiscoveryServ:
 
     @staticmethod
     def out_mydb(sql_query,sql_data):
+        """
+        @brief      Static method is to output data to MySQL
+        @params      sql_query (query in mysql)
+                    sql_data (data fill query)
+        @return     None
+        """ 
         cnx = connection.MySQLConnection(user="root", password="jennylab", host="127.0.0.1", database="DISCOVERY", port=3307)
         cursor = cnx.cursor()
         print("Insert SQL DATA: ", end="")
@@ -40,11 +63,19 @@ class DiscoveryServ:
 
     @staticmethod
     def server_task(taskqueue,scan_type,scan_data):
-
-        if scan_data is None:
-            PDEBUG.log("Invalid {} scan_data is None".format(scan_type))
-            print("Invalid {} scan_data is None".format(scan_type))
-
+        """
+        @brief      Static method is to process scan task
+        @params      taskqueue (task queue to get the job)
+                    scan_type (type of scan)
+                    scan_data (data to be processed)
+        @return     None
+        """ 
+        if scan_type is None:
+            PDEBUG.log("DiscoveryServ::server_task: Invalid scan_type is None")
+            #print("DiscoveryServ::server_task: Invalid scan_type is None")
+        elif scan_data is None:
+            PDEBUG.log(f"DiscoveryServ::server_task: Invalid {scan_type} scan_data is None")
+            #print("DiscoveryServ::server_task: Invalid {} scan_data is None".format(scan_type))
         else:
             if scan_type == "subdomains":
                 sql_query = ("INSERT INTO SUBDOMAINS (DOMAIN,SUBDOMAIN,IP) VALUES (%s,%s,%s)")

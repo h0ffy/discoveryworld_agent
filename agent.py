@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 #	DiscoveryWorld Agent
-#	Written by A.... / JennySec
+#	Written by Alberto Garcia de Dios @h0ffy / JennyLab
+# 	https://jennylab.net
+# 	https://jennylab.blog
+# 	https://jennylab.me
 
 import sys,os,socket
 import urllib, urllib2

@@ -22,7 +22,7 @@ class BeanStackQueue:
         self.server = server
         self.port = port
         
-        PDEBUG.log("BeanStackQueue: Loading BeanStackQueue class (beantalk.py)")
+        PDEBUG.log("BeanStackQueue::BeanStackQueue: Loading BeanStackQueue class (beantalk.py)")
         if auto == True:
             self.run()
     def __close__(self):
@@ -38,29 +38,29 @@ class BeanStackQueue:
         self.report(outline)
 
     def run(self):
-        PDEBUG.log("Running BeanStackQueue.run()")
+        PDEBUG.log("Running BeanStackQueue::run()")
         self.status = True
         
         try:
-            PDEBUG.log("BeanStackQueue: Connecting to {} server on port {}".format(self.server,self.port))
+            PDEBUG.log("BeanStackQueue::run(): Connecting to {} server on port {}".format(self.server,self.port))
             self.client = BeanstalkClient(self.server,self.port)    
             
         except:
             self.client = None
-            PDEBUG.log("BeanStackQueue: Error connect to {} server on port {}".format(self.server,self.port))
+            PDEBUG.log("BeanStackQueue::run(): Error connect to {} server on port {}".format(self.server,self.port))
             #self.__exit__()
             
         
-        PDEBUG.log("BeanStackQueue: Connected found to {} server on port {}".format(self.server,self.port))
+        PDEBUG.log("BeanStackQueue::run(): Connected found to {} server on port {}".format(self.server,self.port))
         
         
 
     def recv(self,queue_name):
         try:
             self.client.watch(queue_name)
-            PDEBUG.log("BeanStackQueue: watch jobs from {} [OK]".format(queue_name,self.job_data))
+            PDEBUG.log("BeanStackQueue::rev(): Watch jobs from {} [OK]".format(queue_name,self.job_data))
         except:
-            PDEBUG.log("BeanStackQueue: Error loading {} queue name [ERROR]".format(queue_name))
+            PDEBUG.log("BeanStackQueue::recv(): Error loading {} queue name [ERROR]".format(queue_name))
         
         try:
             #for job in self.client.reserve_iter():
@@ -70,11 +70,11 @@ class BeanStackQueue:
                 self.job_id=job.job_id
                 self.client.bury_job(self.job_id)
                 #  self.client.execute_job(job)
-                PDEBUG.log("BeanStackQueue: job {} from {} data ({}) [OK]".format(self.job_id,queue_name,self.job_data))
+                PDEBUG.log("BeanStackQueue::recv(): Job {} from {} data ({}) [OK]".format(self.job_id,queue_name,self.job_data))
                 return(self.job)
             
         except:
-            PDEBUG.log("BeanStackQueue: error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
+            PDEBUG.log("BeanStackQueue::recv(): Error job from {} data ({}) [ERROR]".format(queue_name,self.job_data))
             return(None)
 
     def release(self,job_id):
@@ -82,13 +82,13 @@ class BeanStackQueue:
         self.client.delete_job(job_id)
 
     def test_task(self,event):
-        PDEBUG.log("BeanStackQueue: test_task {}".format(event))
+        PDEBUG.log("BeanStackQueue::test_task({})".format(event))
         self.client.use("agent.scan")
         with self.client.using("agent.scan") as inserter:
             inserter.put_job(json.dumps(event))    
     
     def report(self,event):
-        PDEBUG.log("BeanStackQueue: report {}".format(event))
+        PDEBUG.log("BeanStackQueue::report({})".format(event))
         self.client.use("master.output")
         with self.client.using("master.output") as inserter:
             inserter.put_job(json.dumps(event))
@@ -114,7 +114,10 @@ class BeanStackQueue:
 
     @staticmethod
     def beanstalk_cli(cmd,data):
-        cli_client = BeanstalkClient("127.0.0.1",13120)
-        #task = cli_client.use("agent.scan")
-        with cli_client.using("agent.scan") as inserter:
-            inserter.put_job(json.dumps({ "scan_type" : cmd, "scan_data" : data }))
+        try:
+            cli_client = BeanstalkClient("127.0.0.1",13120)
+            #task = cli_client.use("agent.scan")
+            with cli_client.using("agent.scan") as inserter:
+                inserter.put_job(json.dumps({ "scan_type" : cmd, "scan_data" : data }))
+        except Exception as e:
+            PDEBUG.log(f"{}")

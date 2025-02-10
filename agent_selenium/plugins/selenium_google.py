@@ -68,7 +68,7 @@ class SeleniumGoogle:
             #span = element.find_elements(By.TAG_NAME,'span')
             #print(span[0].get_attribute('innerHTML'))
             #div = element.find_element(By.CLASS_NAME,'ITZIwc')
-            href = a.get_attribute('href'))
+            href = a.get_attribute('href')
             self.results.append(href)
                     
         return(self.results)
